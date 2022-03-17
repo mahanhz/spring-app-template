@@ -1,11 +1,9 @@
-apiVersion: backstage.io/v1beta2
+apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: create-spring-app
   title: Create Spring app
   description: Create Spring application
-  tags:
-    - spring
 
 spec:
   owner: trioptima
@@ -34,10 +32,10 @@ spec:
       input:
         url: ./skeleton
         values:
-          app_name: '{{ parameters.app_name }}'
+          app_name: ${{ parameters.app_name }}
 
     - id: publish
       name: Publish
       action: publish:file
       input:
-        path: '{{ parameters.path }}'
+        path: ${{ parameters.path }}
