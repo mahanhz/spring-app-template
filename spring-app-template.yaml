@@ -1,0 +1,43 @@
+apiVersion: backstage.io/v1beta2
+kind: Template
+metadata:
+  name: create-spring-app
+  title: Create Spring app
+  description: Create Spring application
+  tags:
+    - spring
+
+spec:
+  owner: trioptima
+  type: service
+  parameters:
+    - title: Provide some simple information
+      required:
+        - app_name
+      properties:
+        app_name:
+          title: Name
+          type: string
+          description: Unique name of the app
+    - title: Choose a location
+      required:
+        - path
+      properties:
+        path:
+          title: Local path Location
+          type: string
+          description: Local path
+  steps:
+    - id: template
+      name: Fetch Skeleton + Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          app_name: '{{ parameters.app_name }}'
+
+    - id: publish
+      name: Publish
+      action: publish:file
+      input:
+        path: '{{ parameters.path }}'
