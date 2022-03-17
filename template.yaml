@@ -1,67 +1,41 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
-# some metadata about the template itself
 metadata:
-  name: v1beta3-demo
-  title: Spring App template
-  description: spring app template
+  name: create-spring-app
+  title: Create Spring app
+  description: Create Spring application
+
 spec:
   owner: trioptima
   type: service
-
-  # these are the steps which are rendered in the frontend with the form input
   parameters:
-    - title: Fill in some steps
+    - title: Provide some simple information
       required:
-        - name
+        - app_name
       properties:
-        name:
+        app_name:
           title: Name
           type: string
-          description: Unique name of the component
-          ui:autofocus: true
-          ui:options:
-            rows: 5
+          description: Unique name of the app
     - title: Choose a location
       required:
-        - repoUrl
+        - path
       properties:
-        repoUrl:
-          title: Repository Location
+        path:
+          title: Local path Location
           type: string
-          ui:field: RepoUrlPicker
-          ui:options:
-            allowedHosts:
-              - github.com
-
-  # here's the steps that are executed in series in the scaffolder backend
+          description: Local path
   steps:
-    - id: fetch-base
-      name: Fetch Base
+    - id: template
+      name: Fetch Skeleton + Template
       action: fetch:template
       input:
-        url: ./template
+        url: ./skeleton
         values:
-          name: ${{ parameters.name }}
-
-    - id: fetch-docs
-      name: Fetch Docs
-      action: fetch:plain
-      input:
-        targetPath: ./community
-        url: https://github.com/backstage/community/tree/main/backstage-community-sessions
+          app_name: ${{ parameters.app_name }}
 
     - id: publish
       name: Publish
-      action: publish:github
+      action: publish:file
       input:
-        allowedHosts: ['github.com']
-        description: This is ${{ parameters.name }}
-        repoUrl: ${{ parameters.repoUrl }}
-
-    - id: register
-      name: Register
-      action: catalog:register
-      input:
-        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
-        catalogInfoPath: '/catalog-info.yaml'
+        path: ${{ parameters.path }}
